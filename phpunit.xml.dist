@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+    <testsuites>
+        <testsuite name="DEM-Reader Tests">
+            <directory suffix="Test.php">./src/Tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <exclude>
+                <directory>./src/Tests</directory>
+            </exclude>
+            <directory>./src</directory>
+        </whitelist>
+    </filter>
+</phpunit>

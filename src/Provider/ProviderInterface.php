@@ -1,0 +1,30 @@
+<?php
+
+/*
+ * This file is part of the Runalyze DEM Reader.
+ *
+ * (c) RUNALYZE <mail@runalyze.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Runalyze\DEM\Provider;
+
+interface ProviderInterface
+{
+    /**
+     * @param  float $latitude
+     * @param  float $longitude
+     * @return int
+     */
+    public function getElevation($latitude, $longitude);
+
+    /**
+     * @param  array                     $latitudes
+     * @param  array                     $longitudes
+     * @throws \InvalidArgumentException
+     * @return array                     elevations [m] can be false if nothing retrieved
+     */
+    public function getElevations(array $latitudes, array $longitudes);
+}

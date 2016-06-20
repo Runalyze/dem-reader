@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+sudo: false
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+    - tests/testfiles
+
+before_install:
+  - ./bin/download-testfiles.sh
+
+script:
+  - vendor/bin/php-cs-fixer fix -v --diff --dry-run

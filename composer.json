@@ -1,0 +1,17 @@
+{
+  "name": "runalyze/dem-reader",
+  "description": "Read digital elevation files such as GeoTIFF files for srtm data or similar.",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.5.9"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*",
+    "friendsofphp/php-cs-fixer": "^1.11"
+  },
+  "autoload": {
+    "psr-4": {
+      "Runalyze\\DEM\\": "src/"
+    }
+  }
+}
