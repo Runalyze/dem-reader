@@ -26,11 +26,11 @@ class BilinearInterpolation implements InterpolationInterface
      * |
      * p2------------p3
      *
-     * @param  float                     $x                      x position of Z within bounding box, required: $x in [0.0, 1.0]
-     * @param  float                     $y                      y position of Z within bounding box, required: $y in [0.0, 1.0]
-     * @param  array                     $elevationOnBoundingBox elevation data on [p0, p1, p2, p3]
-     * @return int                       estimated elevation on point Z
-     * @throws \InvalidArgumentException
+     * @param  float                    $x                      x position of Z within bounding box, required: $x in [0.0, 1.0]
+     * @param  float                    $y                      y position of Z within bounding box, required: $y in [0.0, 1.0]
+     * @param  array                    $elevationOnBoundingBox elevation data on [p0, p1, p2, p3]
+     * @return int                      estimated elevation on point Z
+     * @throws InvalidArgumentException
      */
     public function interpolate($x, $y, array $elevationOnBoundingBox)
     {

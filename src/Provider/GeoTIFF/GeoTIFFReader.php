@@ -11,6 +11,7 @@
 
 namespace Runalyze\DEM\Provider\GeoTIFF;
 
+use Runalyze\DEM\Exception\RuntimeException;
 use Runalyze\DEM\Provider\AbstractResourceReader;
 
 class GeoTIFFReader extends AbstractResourceReader
@@ -70,9 +71,6 @@ class GeoTIFFReader extends AbstractResourceReader
     /** @var string */
     protected $ByteOrder;
 
-    /**
-     * @param string $filename
-     */
     public function readHeader()
     {
         $this->checkByteOrderAndTiffIdentifier();
@@ -82,7 +80,7 @@ class GeoTIFFReader extends AbstractResourceReader
 
     /**
      * Go to the file header and work out the byte order (bytes 0-1) and TIFF identifier (bytes 2-3).
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function checkByteOrderAndTiffIdentifier()
     {
@@ -90,13 +88,13 @@ class GeoTIFFReader extends AbstractResourceReader
         $data = unpack('c2chars/vTIFF_ID', fread($this->FileResource, 4));
 
         if (static::MAGIC_TIFF_ID !== $data['TIFF_ID']) {
-            throw new \RuntimeException('Provider file "'.$this->CurrentFilename.'"" is not a valid tiff file.');
+            throw new RuntimeException('Provided GeoTIFF file is not a valid tiff file.');
         }
 
         $this->ByteOrder = sprintf('%c%c', $data['chars1'], $data['chars2']);
 
         if ($this->ByteOrder !== static::LITTLE_ENDIAN && $this->ByteOrder !== static::BIG_ENDIAN) {
-            throw new \RuntimeException('Provider file "'.$this->CurrentFilename.'"" has an unknown byte order.');
+            throw new RuntimeException('Provided GeoTIFF file has an unknown byte order.');
         }
     }
 

@@ -17,7 +17,7 @@ use Runalyze\DEM\ReaderInterface;
 interface ProviderInterface extends ReaderInterface
 {
     /**
-     * @param \Runalyze\DEM\Interpolation\InterpolationInterface $interpolation
+     * @param InterpolationInterface $interpolation
      */
     public function setInterpolation(InterpolationInterface $interpolation);
 

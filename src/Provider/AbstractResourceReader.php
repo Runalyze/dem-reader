@@ -11,6 +11,8 @@
 
 namespace Runalyze\DEM\Provider;
 
+use Runalyze\DEM\Exception\RuntimeException;
+
 abstract class AbstractResourceReader implements ResourceReaderInterface
 {
     /** @var resource|bool */
@@ -32,8 +34,8 @@ abstract class AbstractResourceReader implements ResourceReaderInterface
     }
 
     /**
-     * @param  resource          $resource
-     * @throws \RuntimeException
+     * @param  resource         $resource
+     * @throws RuntimeException
      */
     public function setResource($resource)
     {
@@ -42,7 +44,7 @@ abstract class AbstractResourceReader implements ResourceReaderInterface
         $this->FileResource = $resource;
 
         if (false === $this->FileResource) {
-            throw new \RuntimeException('Provider file "'.$filename.'"" can\'t be opened for reading.');
+            throw new RuntimeException('Provided resource is invalid.');
         }
     }
 

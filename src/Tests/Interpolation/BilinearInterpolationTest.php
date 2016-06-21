@@ -15,7 +15,7 @@ use Runalyze\DEM\Interpolation\BilinearInterpolation;
 
 class BilinearInterpolationTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var \Runalyze\DEM\Interpolation\BilinearInterpolation */
+    /** @var BilinearInterpolation */
     protected $Interpolation;
 
     public function setUp()

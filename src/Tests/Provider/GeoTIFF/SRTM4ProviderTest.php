@@ -20,7 +20,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
     const PATH_TO_FILES = '/../../../../tests/testfiles/';
 
     /**
-     * @var \Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider
+     * @var SRTM4Provider
      */
     protected $Provider;
 
@@ -45,6 +45,11 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->Provider->hasDataFor([
             [90.0, 0.1],
         ]));
+    }
+
+    public function testInvalidLocation()
+    {
+        $this->assertFalse($this->Provider->getElevation(0.0, 0.0));
     }
 
     public function testThatAvailableFileIsRecognized()

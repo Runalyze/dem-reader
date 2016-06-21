@@ -11,6 +11,8 @@
 
 namespace Runalyze\DEM\Provider\GeoTIFF;
 
+use Runalyze\DEM\Exception\InvalidArgumentException;
+
 class SRTM4Provider extends AbstractGeoTIFFProvider
 {
     /** @var int */
@@ -37,6 +39,9 @@ class SRTM4Provider extends AbstractGeoTIFFProvider
     /** @var string */
     protected $FilenameFormat = 'srtm_%02d_%02d.tif';
 
+    /** @var GeoTIFFReader */
+    protected $ResourceReader;
+
     public function initResourceReader()
     {
         $this->ResourceReader = new GeoTIFFReader();
@@ -51,10 +56,10 @@ class SRTM4Provider extends AbstractGeoTIFFProvider
     }
 
     /**
-     * @param  float                     $latitude
-     * @param  float                     $longitude
+     * @param  float                    $latitude
+     * @param  float                    $longitude
      * @return string
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function getFilenameFor($latitude, $longitude)
     {

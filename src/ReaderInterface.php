@@ -11,6 +11,8 @@
 
 namespace Runalyze\DEM;
 
+use Runalyze\DEM\Exception\InvalidArgumentException;
+
 interface ReaderInterface
 {
     /**
@@ -20,10 +22,10 @@ interface ReaderInterface
     public function hasDataFor(array $latitudeLongitudes);
 
     /**
-     * @param  float[]                   $latitudes
-     * @param  float[]                   $longitudes
-     * @throws \InvalidArgumentException
-     * @return array                     elevations [m] can be false if nothing retrieved
+     * @param  float[]                  $latitudes
+     * @param  float[]                  $longitudes
+     * @return array                    elevations [m] can be false if nothing retrieved
+     * @throws InvalidArgumentException
      */
     public function getElevations(array $latitudes, array $longitudes);
 }

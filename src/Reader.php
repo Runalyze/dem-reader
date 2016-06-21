@@ -11,18 +11,19 @@
 
 namespace Runalyze\DEM;
 
+use Runalyze\DEM\Exception\RuntimeException;
 use Runalyze\DEM\Provider\ProviderInterface;
 
 class Reader implements ReaderInterface
 {
-    /** @var \Runalyze\DEM\Provider\ProviderInterface[] */
+    /** @var ProviderInterface[] */
     protected $Provider = [];
 
-    /** @var int */
-    protected $InvalidFlag = 0x8000;
+    /** @var bool */
+    protected $InvalidFlag = false;
 
     /**
-     * @param \Runalyze\DEM\Provider\ProviderInterface|null $provider
+     * @param ProviderInterface|null $provider
      */
     public function __construct(ProviderInterface $provider = null)
     {
@@ -32,7 +33,7 @@ class Reader implements ReaderInterface
     }
 
     /**
-     * @param \Runalyze\DEM\Provider\ProviderInterface $provider
+     * @param ProviderInterface $provider
      */
     public function addProvider(ProviderInterface $provider)
     {
@@ -71,16 +72,48 @@ class Reader implements ReaderInterface
     }
 
     /**
-     * @param  array                     $latitudes
-     * @param  array                     $longitudes
-     * @throws \InvalidArgumentException
-     * @return array                     elevations [m] can be false if nothing retrieved
+     * @param  array            $latitudes
+     * @param  array            $longitudes
+     * @return array            elevations [m] can be false if nothing retrieved
+     * @throws RuntimeException
      */
     public function getElevations(array $latitudes, array $longitudes)
     {
-        // TODO
+        $boundaries = $this->getBoundsFor($latitudes, $longitudes);
 
-        // loop through providers
-        // set all 'false' elevations to $this->InvalidFlag
+        foreach ($this->Provider as $provider) {
+            if ($provider->hasDataFor($boundaries)) {
+                return $provider->getElevations($latitudes, $longitudes);
+            }
+        }
+
+        throw new RuntimeException('No provider can handle the given locations.');
+    }
+
+    /**
+     * @param  float[] $latitudes
+     * @param  float[] $longitudes
+     * @return array   array(array($lat, $lng), ...)
+     */
+    protected function getBoundsFor(array $latitudes, array $longitudes)
+    {
+        $filteredLatitudes = array_filter($latitudes);
+        $filteredLongitudes = array_filter($longitudes);
+
+        if (empty($filteredLatitudes) || empty($filteredLongitudes)) {
+            return [];
+        }
+
+        $minLatitude = min($filteredLatitudes);
+        $maxLatitude = max($filteredLatitudes);
+        $minLongitude = min($filteredLongitudes);
+        $maxLongitude = max($filteredLongitudes);
+
+        return [
+            [$minLatitude, $minLongitude],
+            [$minLatitude, $maxLongitude],
+            [$maxLatitude, $minLongitude],
+            [$maxLatitude, $maxLongitude],
+        ];
     }
 }

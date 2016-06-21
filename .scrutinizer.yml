@@ -1,5 +1,7 @@
 filter:
   paths: [src/*]
+  excluded_paths:
+    - src/Tests/*
 tools:
   php_analyzer: true
   php_mess_detector: true

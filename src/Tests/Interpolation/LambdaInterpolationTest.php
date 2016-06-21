@@ -16,7 +16,7 @@ use Runalyze\DEM\Interpolation\LambdaInterpolation;
 class LambdaInterpolationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testInvalidClosure()
     {
@@ -26,7 +26,7 @@ class LambdaInterpolationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testThatInvalidCallsAreDetected()
     {

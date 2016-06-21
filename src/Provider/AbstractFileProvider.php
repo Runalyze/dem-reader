@@ -11,6 +11,7 @@
 
 namespace Runalyze\DEM\Provider;
 
+use Runalyze\DEM\Exception\InvalidArgumentException;
 use Runalyze\DEM\Interpolation\GuessInvalidValuesTrait;
 use Runalyze\DEM\Interpolation\InterpolationInterface;
 
@@ -33,15 +34,15 @@ abstract class AbstractFileProvider implements ProviderInterface
     /** @var string|bool */
     protected $CurrentFilename = false;
 
-    /** @var \Runalyze\DEM\Interpolation\InterpolationInterface|null */
+    /** @var InterpolationInterface|null */
     protected $Interpolation;
 
-    /** @var \Runalyze\DEM\Provider\ResourceReaderInterface */
+    /** @var ResourceReaderInterface */
     protected $ResourceReader;
 
     /**
-     * @param string                                                  $pathToFiles
-     * @param \Runalyze\DEM\Interpolation\InterpolationInterface|null $interpolation
+     * @param string                      $pathToFiles
+     * @param InterpolationInterface|null $interpolation
      */
     public function __construct($pathToFiles, InterpolationInterface $interpolation = null)
     {
@@ -52,7 +53,7 @@ abstract class AbstractFileProvider implements ProviderInterface
     }
 
     /**
-     * @param \Runalyze\DEM\Interpolation\InterpolationInterface $interpolation
+     * @param InterpolationInterface $interpolation
      */
     public function setInterpolation(InterpolationInterface $interpolation)
     {
@@ -60,14 +61,15 @@ abstract class AbstractFileProvider implements ProviderInterface
     }
 
     /**
-     * @param  array $latitudeLongitudes array(array($lat, $lng), ...)
+     * @param  array                    $latitudeLongitudes array(array($lat, $lng), ...)
      * @return bool
+     * @throws InvalidArgumentException
      */
     public function hasDataFor(array $latitudeLongitudes)
     {
         foreach ($latitudeLongitudes as $location) {
             if (!is_array($location) || count($location) !== 2) {
-                throw new \InvalidArgumentException('Locations must be arrays of two values.');
+                throw new InvalidArgumentException('Locations must be arrays of two values.');
             }
 
             if (!$this->locationIsInBounds($location[0], $location[1])) {
@@ -106,8 +108,8 @@ abstract class AbstractFileProvider implements ProviderInterface
     /**
      * @param  float[]                   $latitudes
      * @param  float[]                   $longitudes
-     * @throws \InvalidArgumentException
      * @return array                     elevations [m] can be false if nothing retrieved
+     * @throws InvalidArgumentException;
      */
     public function getElevations(array $latitudes, array $longitudes)
     {
@@ -115,7 +117,7 @@ abstract class AbstractFileProvider implements ProviderInterface
         $elevations = [];
 
         if (count($longitudes) !== $numberOfPoints) {
-            throw new \InvalidArgumentException('Arrays for latitude and longitude must be of same size.');
+            throw new InvalidArgumentException('Arrays for latitude and longitude must be of same size.');
         }
 
         for ($i = 0; $i < $numberOfPoints; ++$i) {
@@ -129,15 +131,21 @@ abstract class AbstractFileProvider implements ProviderInterface
      * Get elevation for specified location.
      *
      * Availability of data must be checked in advance via hasDataFor($locations).
+     * Only 'invalid' locations such as (0.0, 0.0) won't throw an exception but return false.
      *
-     * @param  float    $latitude
-     * @param  float    $longitude
-     * @return int|bool elevation [m] can be false if nothing retrieved
+     * @param  float                     $latitude
+     * @param  float                     $longitude
+     * @return int|bool                  elevation [m] can be false if nothing retrieved
+     * @throws InvalidArgumentException;
      */
     public function getElevation($latitude, $longitude)
     {
+        if ($latitude === 0.0 && $longitude === 0.0) {
+            return false;
+        }
+
         if (!$this->locationIsInBounds($latitude, $longitude)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Location (%f, %f) is out of bounds ([-%f, %f], [-%f, %f]).',
                     $latitude, $longitude,
                     static::MAX_LATITUDE, static::MAX_LATITUDE,
