@@ -17,7 +17,7 @@ use Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider;
 class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
 {
     /** @var string */
-    const PATH_TO_FILES = __DIR__.'/../../testfiles/';
+    const PATH_TO_FILES = '/../../../../tests/testfiles/';
 
     /**
      * @var \Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider
@@ -26,7 +26,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->Provider = new SRTM4Provider(self::PATH_TO_FILES);
+        $this->Provider = new SRTM4Provider(__DIR__.self::PATH_TO_FILES);
         $this->Provider->setInterpolation(new BilinearInterpolation());
     }
 
@@ -35,7 +35,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function checkFile($filename)
     {
-        if (!file_exists(self::PATH_TO_FILES.$filename)) {
+        if (!file_exists(__DIR__.self::PATH_TO_FILES.$filename)) {
             $this->markTestSkipped('Required testfile "'.$filename.'" is not available.');
         }
     }

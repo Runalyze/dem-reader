@@ -37,6 +37,11 @@ class SRTM4Provider extends AbstractGeoTIFFProvider
     /** @var string */
     protected $FilenameFormat = 'srtm_%02d_%02d.tif';
 
+    public function initResourceReader()
+    {
+        $this->ResourceReader = new GeoTIFFReader();
+    }
+
     /**
      * @param $format
      */
@@ -85,15 +90,15 @@ class SRTM4Provider extends AbstractGeoTIFFProvider
     }
 
     /**
-     * @param  float $latitude
-     * @param  float $longitude
-     * @return array array(row, col)
+     * @param  float   $latitude
+     * @param  float   $longitude
+     * @return float[] array(row, col)
      */
     protected function getExactRowAndColFor($latitude, $longitude)
     {
-        return [
-            abs($this->CurrentTileLatitude - abs($latitude)) / static::DEGREES_PER_TILE * ($this->NumDataRows - 1),
-            abs($this->CurrentTileLongitude - $longitude) / static::DEGREES_PER_TILE * ($this->NumDataCols - 1),
-        ];
+        return $this->ResourceReader->getExactRowAndColFor(
+            abs($this->CurrentTileLatitude - abs($latitude)) / static::DEGREES_PER_TILE,
+            abs($this->CurrentTileLongitude - $longitude) / static::DEGREES_PER_TILE
+        );
     }
 }

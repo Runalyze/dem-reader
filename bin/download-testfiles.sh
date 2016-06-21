@@ -9,5 +9,6 @@ do
     then
         curl http://srtm.csi.cgiar.org/SRT-ZIP/SRTM_V41/SRTM_Data_GeoTiff/${file}.zip > tests/testfiles/${file}.zip
         unzip -o tests/testfiles/${file}.zip ${file}.tif -d tests/testfiles
+        rm -rf tests/testfiles/${file}.zip
     fi
 done

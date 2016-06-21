@@ -11,9 +11,9 @@
 
 namespace Runalyze\DEM\Provider\GeoTIFF;
 
-use Runalyze\DEM\Provider\AbstractFileProvider;
+use Runalyze\DEM\Provider\AbstractResourceReader;
 
-abstract class AbstractGeoTIFFProvider extends AbstractFileProvider
+class GeoTIFFReader extends AbstractResourceReader
 {
     /**
      * The number of bytes required to hold a TIFF offset address.
@@ -73,27 +73,51 @@ abstract class AbstractGeoTIFFProvider extends AbstractFileProvider
     /**
      * @param string $filename
      */
-    protected function openResource($filename)
+    public function readHeader()
     {
-        $this->loadResource($filename);
         $this->checkByteOrderAndTiffIdentifier();
+        $this->goToIFDEntries();
+        $this->readIFDEntries();
+    }
 
-        // go to the file header and work out the byte order (bytes 0-1) and TIFF identifier (bytes 2-3)
+    /**
+     * Go to the file header and work out the byte order (bytes 0-1) and TIFF identifier (bytes 2-3).
+     * @throws \RuntimeException
+     */
+    protected function checkByteOrderAndTiffIdentifier()
+    {
         fseek($this->FileResource, 0);
         $data = unpack('c2chars/vTIFF_ID', fread($this->FileResource, 4));
 
         if (static::MAGIC_TIFF_ID !== $data['TIFF_ID']) {
-            throw new \RuntimeException('Provider file "'.$filename.'"" is not a valid tiff file.');
+            throw new \RuntimeException('Provider file "'.$this->CurrentFilename.'"" is not a valid tiff file.');
         }
 
-        // the remaining 4 bytes in the header are the offset to the IFD
+        $this->ByteOrder = sprintf('%c%c', $data['chars1'], $data['chars2']);
+
+        if ($this->ByteOrder !== static::LITTLE_ENDIAN && $this->ByteOrder !== static::BIG_ENDIAN) {
+            throw new \RuntimeException('Provider file "'.$this->CurrentFilename.'"" has an unknown byte order.');
+        }
+    }
+
+    /**
+     * The remaining 4 bytes in the header are the offset to the IFD.
+     */
+    protected function goToIFDEntries()
+    {
         fseek($this->FileResource, 4);
+
         $ifdOffsetFormat = $this->isLittleEndian() ? 'VIFDoffset' : 'NIFDoffset';
         $data = unpack($ifdOffsetFormat, fread($this->FileResource, 4));
 
-        // now jump to the IFD offset and get the number of entries in the IFD
-        // which is always stored in the first two bytes of the IFD
         fseek($this->FileResource, $data['IFDoffset']);
+    }
+
+    /**
+     * Read IFD entries which (the number of entries in each is in the first two bytes).
+     */
+    protected function readIFDEntries()
+    {
         $countFormat = $this->isLittleEndian() ? 'vcount' : 'ncount';
         $countData = unpack($countFormat, fread($this->FileResource, 2));
         $ifdFormat = $this->isLittleEndian() ? 'vtag/vtype/Vcount/Voffset' : 'ntag/ntype/Ncount/Noffset';
@@ -116,25 +140,6 @@ abstract class AbstractGeoTIFFProvider extends AbstractFileProvider
     }
 
     /**
-     * Go to the file header and work out the byte order (bytes 0-1) and TIFF identifier (bytes 2-3).
-     */
-    protected function checkByteOrderAndTiffIdentifier()
-    {
-        fseek($this->FileResource, 0);
-        $data = unpack('c2chars/vTIFF_ID', fread($this->FileResource, 4));
-
-        if (static::MAGIC_TIFF_ID !== $data['TIFF_ID']) {
-            throw new \RuntimeException('Provider file "'.$this->CurrentFilename.'"" is not a valid tiff file.');
-        }
-
-        $this->ByteOrder = sprintf('%c%c', $data['chars1'], $data['chars2']);
-
-        if ($this->ByteOrder !== static::LITTLE_ENDIAN && $this->ByteOrder !== static::BIG_ENDIAN) {
-            throw new \RuntimeException('Provider file "'.$this->CurrentFilename.'"" has an unknown byte order.');
-        }
-    }
-
-    /**
      * @return bool
      */
     protected function isLittleEndian()
@@ -143,19 +148,16 @@ abstract class AbstractGeoTIFFProvider extends AbstractFileProvider
     }
 
     /**
-     * @param  string            $filename
-     * @throws \RuntimeException
+     * @param  float   $relativeLatitude
+     * @param  float   $relativeLongitude
+     * @return float[] array(row, col)
      */
-    protected function loadResource($filename)
+    public function getExactRowAndColFor($relativeLatitude, $relativeLongitude)
     {
-        $this->closeResource();
-
-        $this->FileResource = fopen($this->PathToFiles.DIRECTORY_SEPARATOR.$filename, 'rb');
-        $this->CurrentFilename = $filename;
-
-        if (false === $this->FileResource) {
-            throw new \RuntimeException('Provider file "'.$filename.'"" can\'t be opened for reading.');
-        }
+        return [
+            $relativeLatitude * ($this->NumDataRows - 1),
+            $relativeLongitude * ($this->NumDataCols - 1),
+        ];
     }
 
     /**
@@ -163,7 +165,7 @@ abstract class AbstractGeoTIFFProvider extends AbstractFileProvider
      * @param  int      $col
      * @return int|bool
      */
-    protected function getElevationFor($row, $col)
+    public function getElevationFor($row, $col)
     {
         fseek($this->FileResource, $this->StripOffsets + ($row * static::LEN_OFFSET));
 

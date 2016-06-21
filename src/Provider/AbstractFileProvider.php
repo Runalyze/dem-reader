@@ -36,6 +36,9 @@ abstract class AbstractFileProvider implements ProviderInterface
     /** @var \Runalyze\DEM\Interpolation\InterpolationInterface|null */
     protected $Interpolation;
 
+    /** @var \Runalyze\DEM\Provider\ResourceReaderInterface */
+    protected $ResourceReader;
+
     /**
      * @param string                                                  $pathToFiles
      * @param \Runalyze\DEM\Interpolation\InterpolationInterface|null $interpolation
@@ -44,14 +47,8 @@ abstract class AbstractFileProvider implements ProviderInterface
     {
         $this->PathToFiles = $pathToFiles;
         $this->Interpolation = $interpolation;
-    }
 
-    /**
-     * Close resource on destruction.
-     */
-    public function __destruct()
-    {
-        $this->closeResource();
+        $this->initResourceReader();
     }
 
     /**
@@ -60,16 +57,6 @@ abstract class AbstractFileProvider implements ProviderInterface
     public function setInterpolation(InterpolationInterface $interpolation)
     {
         $this->Interpolation = $interpolation;
-    }
-
-    /**
-     * Close resource if it exists.
-     */
-    protected function closeResource()
-    {
-        if (is_resource($this->FileResource)) {
-            fclose($this->FileResource);
-        }
     }
 
     /**
@@ -225,6 +212,8 @@ abstract class AbstractFileProvider implements ProviderInterface
      * @return string
      */
     abstract protected function getFilenameFor($latitude, $longitude);
+
+    abstract protected function initResourceReader();
 
     /**
      * @param string $filename
