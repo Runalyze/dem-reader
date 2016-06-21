@@ -117,8 +117,8 @@ abstract class AbstractFileProvider implements ProviderInterface
     }
 
     /**
-     * @param  array                     $latitudes
-     * @param  array                     $longitudes
+     * @param  float[]                   $latitudes
+     * @param  float[]                   $longitudes
      * @throws \InvalidArgumentException
      * @return array                     elevations [m] can be false if nothing retrieved
      */
@@ -232,9 +232,9 @@ abstract class AbstractFileProvider implements ProviderInterface
     abstract protected function openResource($filename);
 
     /**
-     * @param  int $row
-     * @param  int $col
-     * @return int
+     * @param  int      $row
+     * @param  int      $col
+     * @return int|bool elevation [m] can be false if nothing retrieved
      */
     abstract protected function getElevationFor($row, $col);
 

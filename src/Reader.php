@@ -13,7 +13,7 @@ namespace Runalyze\DEM;
 
 use Runalyze\DEM\Provider\ProviderInterface;
 
-class Reader
+class Reader implements ReaderInterface
 {
     /** @var \Runalyze\DEM\Provider\ProviderInterface[] */
     protected $Provider = [];
@@ -53,6 +53,21 @@ class Reader
     public function hasProviders()
     {
         return !empty($this->Provider);
+    }
+
+    /**
+     * @param  array $latitudeLongitudes array(array($lat, $lng), ...)
+     * @return bool
+     */
+    public function hasDataFor(array $latitudeLongitudes)
+    {
+        foreach ($this->Provider as $provider) {
+            if ($provider->hasDataFor($latitudeLongitudes)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

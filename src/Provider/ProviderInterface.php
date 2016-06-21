@@ -11,20 +11,20 @@
 
 namespace Runalyze\DEM\Provider;
 
-interface ProviderInterface
+use Runalyze\DEM\Interpolation\InterpolationInterface;
+use Runalyze\DEM\ReaderInterface;
+
+interface ProviderInterface extends ReaderInterface
 {
     /**
-     * @param  float $latitude
-     * @param  float $longitude
-     * @return int
+     * @param \Runalyze\DEM\Interpolation\InterpolationInterface $interpolation
      */
-    public function getElevation($latitude, $longitude);
+    public function setInterpolation(InterpolationInterface $interpolation);
 
     /**
-     * @param  array                     $latitudes
-     * @param  array                     $longitudes
-     * @throws \InvalidArgumentException
-     * @return array                     elevations [m] can be false if nothing retrieved
+     * @param  float    $latitude
+     * @param  float    $longitude
+     * @return int|bool elevation [m] can be false if nothing retrieved
      */
-    public function getElevations(array $latitudes, array $longitudes);
+    public function getElevation($latitude, $longitude);
 }

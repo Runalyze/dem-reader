@@ -20,12 +20,12 @@ class SRTM4Provider extends AbstractGeoTIFFProvider
     const MAX_LONGITUDE = 180;
 
     /** @var float */
-    const DEGREES_PER_TILE = 5;
+    const DEGREES_PER_TILE = 5.0;
 
-    /** @var int */
+    /** @var float */
     protected $CurrentTileHorizontalReference;
 
-    /** @var int */
+    /** @var float */
     protected $CurrentTileVerticalReference;
 
     /** @var float top left latitude */

@@ -1,3 +1,20 @@
+## Running Unit Tests
+
+This library uses [phpunit](https://phpunit.de/) for automated tests.
+`phpunit` is installed by default via Composer.
+
+To run checks:
+
+```console
+$ ./vendor/bin/phpunit
+```
+
+Most unit tests for providers require large testfiles. You can download them the following way:
+
+```console
+$ ./bin/download-testfiles.sh
+```
+
 ## Running Coding Standards Checks
 
 This component uses [php-cs-fixer](http://cs.sensiolabs.org/) for coding
