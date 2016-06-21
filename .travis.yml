@@ -18,6 +18,9 @@ before_install:
   - ./bin/download-testfiles.sh
   - mkdir -p build/logs
 
+install:
+  - composer install --prefer-dist --no-interaction
+
 script:
   - phpunit --coverage-clover build/logs/clover.xml
   - vendor/bin/php-cs-fixer fix -v --diff --dry-run
