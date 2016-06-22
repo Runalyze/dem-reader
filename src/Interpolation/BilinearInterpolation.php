@@ -36,7 +36,7 @@ class BilinearInterpolation implements InterpolationInterface
     {
         $this->checkArguments($x, $y, $elevationOnBoundingBox);
 
-        return round(
+        return (int) round(
             $elevationOnBoundingBox[0] * (1 - $x) * (1 - $y)
             + $elevationOnBoundingBox[1] * $x * (1 - $y)
             + $elevationOnBoundingBox[2] * $y * (1 - $x)

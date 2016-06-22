@@ -60,6 +60,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($Reader->hasDataFor([[0.0, 0.0], [0.0, 0.0]]));
         $this->assertTrue($Reader->hasDataFor([[0.0, 0.0], [4.2, 3.1]]));
+        $this->assertEquals([42, 42, 42], $Reader->getElevations([0.0, 0.0, 0.0], [0.0, 0.0, 0.0]));
         $this->assertEquals([42, 42, 42], $Reader->getElevations([0.0, 4.2, 0.0], [0.0, 3.1, 0.0]));
     }
 }

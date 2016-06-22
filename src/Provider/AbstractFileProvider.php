@@ -12,7 +12,6 @@
 namespace Runalyze\DEM\Provider;
 
 use Runalyze\DEM\Exception\InvalidArgumentException;
-use Runalyze\DEM\Interpolation\GuessInvalidValuesTrait;
 use Runalyze\DEM\Interpolation\InterpolationInterface;
 
 abstract class AbstractFileProvider implements ProviderInterface
@@ -58,6 +57,11 @@ abstract class AbstractFileProvider implements ProviderInterface
     public function setInterpolation(InterpolationInterface $interpolation)
     {
         $this->Interpolation = $interpolation;
+    }
+
+    public function removeInterpolation()
+    {
+        $this->Interpolation = null;
     }
 
     /**
@@ -203,15 +207,6 @@ abstract class AbstractFileProvider implements ProviderInterface
             ($exactColValue - $col),
             $elevationOnBoundingBox
         );
-    }
-
-    /**
-     * @param  string $filename
-     * @return bool
-     */
-    protected function resourceIsCurrentlyOpened($filename)
-    {
-        return $filename !== $this->CurrentFilename;
     }
 
     /**

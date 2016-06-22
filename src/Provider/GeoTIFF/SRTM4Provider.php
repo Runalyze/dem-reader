@@ -74,13 +74,13 @@ class SRTM4Provider extends AbstractGeoTIFFProvider
      */
     protected function loadTileReferencesFor($latitude, $longitude)
     {
-        if (fmod($latitude, static::DEGREES_PER_TILE) === 0) {
+        if (fmod($latitude, static::DEGREES_PER_TILE) === 0.0) {
             $this->CurrentTileVerticalReference = (static::MAX_LATITUDE - $latitude) / static::DEGREES_PER_TILE + 1;
         } else {
             $this->CurrentTileVerticalReference = ceil((static::MAX_LATITUDE - $latitude) / static::DEGREES_PER_TILE);
         }
 
-        if (fmod($longitude, static::DEGREES_PER_TILE) === 0) {
+        if (fmod($longitude, static::DEGREES_PER_TILE) === 0.0) {
             $this->CurrentTileHorizontalReference = (static::MAX_LONGITUDE + $longitude) / static::DEGREES_PER_TILE + 1;
         } else {
             $this->CurrentTileHorizontalReference = ceil((static::MAX_LONGITUDE + $longitude) / static::DEGREES_PER_TILE);

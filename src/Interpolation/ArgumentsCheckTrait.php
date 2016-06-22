@@ -19,7 +19,6 @@ trait ArgumentsCheckTrait
      * @param  float                    $x
      * @param  float                    $y
      * @param  array                    $elevationOnBoundingBox elevation data on [p0, p1, p2, p3]
-     * @return int                      estimated elevation on point Z
      * @throws InvalidArgumentException
      */
     protected function checkArguments($x, $y, array $elevationOnBoundingBox)

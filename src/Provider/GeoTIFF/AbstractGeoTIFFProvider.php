@@ -21,7 +21,9 @@ abstract class AbstractGeoTIFFProvider extends AbstractFileProvider
      */
     protected function openResource($filename)
     {
-        $this->ResourceReader->setResource(fopen($this->PathToFiles.DIRECTORY_SEPARATOR.$filename, 'rb'));
+        $resource = fopen($this->PathToFiles.DIRECTORY_SEPARATOR.$filename, 'rb');
+
+        $this->ResourceReader->setResource($resource);
         $this->ResourceReader->readHeader();
 
         $this->CurrentFilename = $filename;

@@ -35,9 +35,18 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function checkFile($filename)
     {
-        if (!file_exists(__DIR__.self::PATH_TO_FILES.$filename)) {
+        if (!$this->fileIsThere($filename)) {
             $this->markTestSkipped('Required testfile "'.$filename.'" is not available.');
         }
+    }
+
+    /**
+     * @param  string $filename
+     * @return bool
+     */
+    protected function fileIsThere($filename)
+    {
+        return file_exists(__DIR__.self::PATH_TO_FILES.$filename);
     }
 
     public function testThatLocationOutOfBoundsIsRecognized()
@@ -45,6 +54,11 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->Provider->hasDataFor([
             [90.0, 0.1],
         ]));
+    }
+
+    public function testThatThereIsNotDataForSomewhereOverTheRainbow()
+    {
+        $this->assertFalse($this->Provider->hasDataFor([[18.979, -45.703]]));
     }
 
     public function testInvalidLocation()
@@ -60,6 +74,41 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
             [49.4, 7.7],
             [49.5, 7.6],
         ]));
+    }
+
+    public function testThatFilenameFormatCanBeChanged()
+    {
+        $this->checkFile('srtm_38_03.tif');
+
+        $this->Provider->setFilenameFormat('srtm-%02d-%02d.tif');
+        $this->assertFalse($this->Provider->hasDataFor([[49.4, 7.7]]));
+
+        $this->Provider->setFilenameFormat('srtm_%02d_%02d.tif');
+        $this->assertTrue($this->Provider->hasDataFor([[49.4, 7.7]]));
+    }
+
+    public function testTileBoundary()
+    {
+        $this->checkFile('srtm_38_03.tif');
+
+        if (
+            !$this->fileIsThere('srtm_38_02.tif') &&
+            !$this->fileIsThere('srtm_37_02.tif') &&
+            !$this->fileIsThere('srtm_37_03.tif') &&
+            !$this->fileIsThere('srtm_38_04.tif') &&
+            !$this->fileIsThere('srtm_39_03.tif') &&
+            !$this->fileIsThere('srtm_39_04.tif')
+        ) {
+            $this->assertTrue($this->Provider->hasDataFor([[50.00000, 5.00000]]));
+            $this->assertFalse($this->Provider->hasDataFor([[50.00001, 5.00000]]));
+            $this->assertFalse($this->Provider->hasDataFor([[50.00000, 4.99999]]));
+
+            $this->assertTrue($this->Provider->hasDataFor([[45.00001, 9.99999]]));
+            $this->assertFalse($this->Provider->hasDataFor([[45.00000, 9.99999]]));
+            $this->assertFalse($this->Provider->hasDataFor([[45.00001, 10.0000]]));
+        } else {
+            $this->markTestSkipped('Can\'t check boundaries of tile as too many files are there.');
+        }
     }
 
     public function testSingleElevationInGermany()
@@ -121,6 +170,21 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [22, 25, 41],
+            $this->Provider->getElevations(
+                [40.7127,  40.7132,  40.7137],
+                [-74.0059, -74.0064, -74.0069]
+            )
+        );
+    }
+
+    public function testNewYorkWithoutInterpolation()
+    {
+        $this->checkFile('srtm_22_04.tif');
+
+        $this->Provider->removeInterpolation();
+
+        $this->assertEquals(
+            [26, 32, 32],
             $this->Provider->getElevations(
                 [40.7127,  40.7132,  40.7137],
                 [-74.0059, -74.0064, -74.0069]

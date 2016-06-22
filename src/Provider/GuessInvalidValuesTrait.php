@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Runalyze\DEM\Interpolation;
+namespace Runalyze\DEM\Provider;
 
 trait GuessInvalidValuesTrait
 {
