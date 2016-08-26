@@ -211,8 +211,8 @@ abstract class AbstractFileProvider implements ProviderInterface
         $this->guessInvalidValuesOnBox($elevationOnBoundingBox);
 
         return $this->Interpolation->interpolate(
-            ($exactRowValue - $row),
             ($exactColValue - $col),
+            ($exactRowValue - $row),
             $elevationOnBoundingBox
         );
     }

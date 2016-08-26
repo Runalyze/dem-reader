@@ -115,14 +115,14 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->checkFile('srtm_38_03.tif');
 
-        $this->assertEquals(238, $this->Provider->getElevation(49.444722, 7.768889));
+        $this->assertEquals(237, $this->Provider->getElevation(49.444722, 7.768889));
     }
 
     public function testThatUnknownElevationInSydneyIsGuessedBySurroundingValues()
     {
         $this->checkFile('srtm_67_19.tif');
 
-        $this->assertEquals(3, $this->Provider->getElevation(-33.8705667, 151.1486337));
+        $this->assertEquals(4, $this->Provider->getElevation(-33.8705667, 151.1486337));
     }
 
     public function testMultipleElevationsInSydney()
@@ -130,7 +130,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_67_19.tif');
 
         $this->assertEquals(
-            [3, 3, 2],
+            [4, 4, 3],
             $this->Provider->getElevations(
                 [-33.8706555, -33.8705667, -33.8704860],
                 [151.1486918, 151.1486337, 151.1485585]
@@ -143,7 +143,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_36_02.tif');
 
         $this->assertEquals(
-            [18, 18, 21],
+            [20, 19, 19],
             $this->Provider->getElevations(
                 [51.5073509, 51.5074509, 51.5075509],
                 [-0.1277583, -0.1278583, -0.1279583]
@@ -156,7 +156,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_40_17.tif');
 
         $this->assertEquals(
-            [1666, 1669, 1671],
+            [1668, 1671, 1672],
             $this->Provider->getElevations(
                 [-22.5700, -22.5705, -22.5710],
                 [17.0836,  17.0841,  17.0846]
@@ -169,7 +169,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_22_04.tif');
 
         $this->assertEquals(
-            [22, 25, 41],
+            [26, 29, 39],
             $this->Provider->getElevations(
                 [40.7127,  40.7132,  40.7137],
                 [-74.0059, -74.0064, -74.0069]
