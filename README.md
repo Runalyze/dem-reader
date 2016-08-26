@@ -1,5 +1,6 @@
 # DEM reader
 
+[![Latest Stable Version](https://img.shields.io/packagist/v/runalyze/dem-reader.svg)](https://packagist.org/packages/runalyze/dem-reader)
 [![Build Status](https://travis-ci.org/Runalyze/dem-reader.svg?branch=master)](https://travis-ci.org/Runalyze/dem-reader)
 [![Code Coverage](https://scrutinizer-ci.com/g/Runalyze/dem-reader/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Runalyze/dem-reader/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Runalyze/dem-reader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Runalyze/dem-reader/?branch=master)
