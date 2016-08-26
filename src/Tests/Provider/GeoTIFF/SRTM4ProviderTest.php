@@ -17,7 +17,7 @@ use Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider;
 class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
 {
     /** @var string */
-    const PATH_TO_FILES = '/../../../../tests/testfiles/';
+    const PATH_TO_FILES = '/../../../../tests/testfiles';
 
     /**
      * @var SRTM4Provider
@@ -46,7 +46,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function fileIsThere($filename)
     {
-        return file_exists(__DIR__.self::PATH_TO_FILES.$filename);
+        return file_exists(__DIR__.self::PATH_TO_FILES.'/'.$filename);
     }
 
     public function testThatLocationOutOfBoundsIsRecognized()

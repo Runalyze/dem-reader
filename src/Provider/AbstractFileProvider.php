@@ -48,7 +48,15 @@ abstract class AbstractFileProvider implements ProviderInterface
         $this->PathToFiles = $pathToFiles;
         $this->Interpolation = $interpolation;
 
+        $this->addSlashToPathIfNotThere();
         $this->initResourceReader();
+    }
+
+    private function addSlashToPathIfNotThere()
+    {
+        if (substr($this->PathToFiles, -1) != '/') {
+            $this->PathToFiles .= '/';
+        }
     }
 
     /**
