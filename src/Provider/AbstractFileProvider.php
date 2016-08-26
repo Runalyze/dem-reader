@@ -54,7 +54,7 @@ abstract class AbstractFileProvider implements ProviderInterface
 
     private function addSlashToPathIfNotThere()
     {
-        if (substr($this->PathToFiles, -1) != '/') {
+        if (substr($this->PathToFiles, -1) !== '/') {
             $this->PathToFiles .= '/';
         }
     }
