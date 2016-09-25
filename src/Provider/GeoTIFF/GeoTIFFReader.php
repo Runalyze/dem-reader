@@ -173,6 +173,6 @@ class GeoTIFFReader extends AbstractResourceReader
 
         $elevation = unpack('velevation', fread($this->FileResource, static::BYTES_PER_SAMPLE))['elevation'];
 
-        return ($elevation <= self::UNKNOWN || $elevation === -self::UNKNOWN) ? false : $elevation;
+        return ($elevation <= self::UNKNOWN || $elevation >= -self::UNKNOWN) ? false : $elevation;
     }
 }

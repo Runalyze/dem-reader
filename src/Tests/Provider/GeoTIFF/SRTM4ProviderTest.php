@@ -92,7 +92,6 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_38_03.tif');
 
         if (
-            !$this->fileIsThere('srtm_38_02.tif') &&
             !$this->fileIsThere('srtm_37_02.tif') &&
             !$this->fileIsThere('srtm_37_03.tif') &&
             !$this->fileIsThere('srtm_38_04.tif') &&
@@ -100,7 +99,6 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
             !$this->fileIsThere('srtm_39_04.tif')
         ) {
             $this->assertTrue($this->Provider->hasDataFor([[50.00000, 5.00000]]));
-            $this->assertFalse($this->Provider->hasDataFor([[50.00001, 5.00000]]));
             $this->assertFalse($this->Provider->hasDataFor([[50.00000, 4.99999]]));
 
             $this->assertTrue($this->Provider->hasDataFor([[45.00001, 9.99999]]));
@@ -189,6 +187,19 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
                 [40.7127,  40.7132,  40.7137],
                 [-74.0059, -74.0064, -74.0069]
             )
+        );
+    }
+
+    /**
+     * @see https://github.com/Runalyze/dem-reader/issues/1
+     */
+    public function testUnknownValuesSavedAs65535()
+    {
+        $this->checkFile('srtm_38_02.tif');
+
+        $this->assertEquals(
+            [3],
+            $this->Provider->getElevations([54.44702], [9.875502])
         );
     }
 }

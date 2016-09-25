@@ -3,7 +3,7 @@ set -ex
 
 mkdir -p tests/testfiles
 
-for file in srtm_38_03 srtm_67_19 srtm_36_02 srtm_40_17 srtm_22_04
+for file in srtm_38_03 srtm_38_02 srtm_67_19 srtm_36_02 srtm_40_17 srtm_22_04
 do
     if [ ! -f tests/testfiles/${file}.tif ]
     then
