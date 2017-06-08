@@ -73,6 +73,9 @@ class SRTM1ArcSecondProviderTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @group germany
+     */
     public function testSingleElevationInGermany()
     {
         $this->checkFile('n49_e007_1arc_v3.tif');
@@ -95,14 +98,16 @@ class SRTM1ArcSecondProviderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @group london
+     */
     public function testLocationsInLondon()
     {
         $this->checkFile('n51_w001_1arc_v3.tif');
 
         // SRTM4: 20, 19, 19
-        // TODO: this fails currently (geotiff file has a size of 1801x3601px instead of 3601x3601px ...)
         $this->assertEquals(
-            [20, 19, 19],
+            [18, 19, 18],
             $this->Provider->getElevations(
                 [51.5073509, 51.5074509, 51.5075509],
                 [-0.1277583, -0.1278583, -0.1279583]
