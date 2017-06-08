@@ -145,7 +145,7 @@ class GeoTIFFReader extends AbstractResourceReader
                     $this->NumDataRows = $constData['offset'];
                     break;
                 case static::TIFF_CONST_BITS_PER_SAMPLE:
-                    $this->BytesPerSample = (int)($constData['offset'] / 8);
+                    $this->BytesPerSample = (int) ($constData['offset'] / 8);
                     break;
                 case static::TIFF_CONST_SAMPLES_PER_PIXEL:
                     $this->SamplesPerPixel = $constData['offset'];
