@@ -12,3 +12,11 @@ do
         rm -rf tests/testfiles/${file}.zip
     fi
 done
+
+for file in n40_w075 n49_e007 n51_w001 s23_e017 s34_e151
+do
+    if [ ! -f tests/testfiles/${file}_1arc_v3.tif ]
+    then
+        curl https://cdn.runalyze.com/static/srtm1/${file}_1arc_v3.tif > tests/testfiles/${file}_1arc_v3.tif
+    fi
+done

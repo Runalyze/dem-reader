@@ -14,6 +14,9 @@ namespace Runalyze\DEM\Provider\GeoTIFF;
 use Runalyze\DEM\Exception\RuntimeException;
 use Runalyze\DEM\Provider\AbstractResourceReader;
 
+/**
+ * @see http://www.awaresystems.be/imaging/tiff/tifftags.html
+ */
 class GeoTIFFReader extends AbstractResourceReader
 {
     /**
@@ -21,13 +24,6 @@ class GeoTIFFReader extends AbstractResourceReader
      * @var int
      */
     const LEN_OFFSET = 4;
-
-    /**
-     * The number of bytes containing each item of elevation data
-     * (= BitsPerSample tag value / 8).
-     * @var int
-     */
-    const BYTES_PER_SAMPLE = 2;
 
     /**
      * Magic number located at bytes 2-3 which identifies a TIFF file.
@@ -45,6 +41,15 @@ class GeoTIFFReader extends AbstractResourceReader
     const TIFF_CONST_IMAGE_LENGTH = 257;
 
     /** @var int */
+    const TIFF_CONST_BITS_PER_SAMPLE = 258;
+
+    /** @var int */
+    const TIFF_CONST_SAMPLES_PER_PIXEL = 277;
+
+    /** @var int */
+    const TIFF_CONST_ROWS_PER_STRIP = 278;
+
+    /** @var int */
     const TIFF_CONST_STRIPBYTECOUNTS = 279;
 
     /** @var int */
@@ -58,6 +63,15 @@ class GeoTIFFReader extends AbstractResourceReader
 
     /** @var int */
     const UNKNOWN = -32768;
+
+    /** @var int The number of bytes containing each item of elevation data */
+    protected $BytesPerSample = 2;
+
+    /** @var int 	The number of components per pixel */
+    protected $SamplesPerPixel = 1;
+
+    /** @var int The number of rows per strip */
+    protected $RowsPerStrip = 1;
 
     /** @var int */
     protected $NumDataRows;
@@ -130,6 +144,15 @@ class GeoTIFFReader extends AbstractResourceReader
                 case static::TIFF_CONST_IMAGE_LENGTH:
                     $this->NumDataRows = $constData['offset'];
                     break;
+                case static::TIFF_CONST_BITS_PER_SAMPLE:
+                    $this->BytesPerSample = (int) ($constData['offset'] / 8);
+                    break;
+                case static::TIFF_CONST_SAMPLES_PER_PIXEL:
+                    $this->SamplesPerPixel = $constData['offset'];
+                    break;
+                case static::TIFF_CONST_ROWS_PER_STRIP:
+                    $this->RowsPerStrip = $constData['offset'];
+                    break;
                 case static::TIFF_CONST_STRIPOFSETS:
                     $this->StripOffsets = $constData['offset'];
                     break;
@@ -165,13 +188,13 @@ class GeoTIFFReader extends AbstractResourceReader
      */
     public function getElevationFor($row, $col)
     {
-        fseek($this->FileResource, $this->StripOffsets + ($row * static::LEN_OFFSET));
+        fseek($this->FileResource, $this->StripOffsets + ceil($row / $this->RowsPerStrip) * static::LEN_OFFSET);
 
         $firstColumnData = unpack('Voffset', fread($this->FileResource, static::LEN_OFFSET));
 
-        fseek($this->FileResource, $firstColumnData['offset'] + $col * static::BYTES_PER_SAMPLE);
+        fseek($this->FileResource, $firstColumnData['offset'] + ($this->NumDataCols * ($row % $this->RowsPerStrip) + $col) * $this->BytesPerSample);
 
-        $elevation = unpack('velevation', fread($this->FileResource, static::BYTES_PER_SAMPLE))['elevation'];
+        $elevation = unpack('velevation', fread($this->FileResource, $this->BytesPerSample))['elevation'];
 
         return ($elevation <= self::UNKNOWN || $elevation >= -self::UNKNOWN) ? false : $elevation;
     }
