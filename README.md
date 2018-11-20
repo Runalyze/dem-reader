@@ -13,7 +13,7 @@ The GeoTIFF reader itself is originally based on [Bob Osola's SRTMGeoTIFFReader]
 
 ```php
 use Runalyze\DEM\Reader;
-use Runalyze\DEM\Provider\SRTM4Provider;
+use Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider;
 
 $Provider = new SRTM4Provider('path/to/srtm/files');
 $Reader = new Reader($Provider);
@@ -24,7 +24,7 @@ To give you some more details: Each provider is valid for its own. You can just 
 use your favorite provider:
 
 ```php
-use Runalyze\DEM\Provider\SRTM4Provider;
+use Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider;
 
 $Provider = new SRTM4Provider('path/to/srtm/files');
 $elevations = $Provider->getElevations($latitudes, $longitudes);
@@ -36,7 +36,7 @@ the given elevation data (in the order they were attached) and the wirst one tha
 
 ```php
 use Runalyze\DEM\Reader;
-use Runalyze\DEM\Provider\SRTM4Provider;
+use Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider;
 
 $Reader = new Reader();
 $Reader->addProvider(new SRTM4Provider('path/to/europe/srtm/files'));
