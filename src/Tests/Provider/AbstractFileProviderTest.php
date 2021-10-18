@@ -14,29 +14,27 @@ namespace Runalyze\DEM\Tests\Provider;
 use Runalyze\DEM\Exception\InvalidArgumentException;
 use Runalyze\DEM\Provider\AbstractFileProvider;
 
-class AbstractFileProviderTest extends \PHPUnit_Framework_TestCase
+class AbstractFileProviderTest extends \PHPUnit\Framework\TestCase
 {
     /** @var AbstractFileProvider */
     protected $Object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Object = $this->getMockForAbstractClass('\\Runalyze\\DEM\\Provider\\AbstractFileProvider', ['path/to/files']);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidArgument()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->Object->hasDataFor(['foo', 'bar']);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testTooManyCoordinatesInLocationArray()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->Object->hasDataFor([[47.7, 47.6, 47.5]]);
     }
 
@@ -45,11 +43,10 @@ class AbstractFileProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->Object->hasDataFor([[49.4, 7.7]]));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testThatGetElevationsRequiresEqualSizedArrays()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->Object->getElevations([1, 2, 3], [1, 2, 3, 4]);
     }
 
@@ -58,11 +55,10 @@ class AbstractFileProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->Object->getElevation(0.0, 0.0));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidLocation()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->assertFalse($this->Object->getElevation(123.4, 321.0));
     }
 }

@@ -13,12 +13,12 @@ namespace Runalyze\DEM\tests\Interpolation;
 
 use Runalyze\DEM\Interpolation\BilinearInterpolation;
 
-class BilinearInterpolationTest extends \PHPUnit_Framework_TestCase
+class BilinearInterpolationTest extends \PHPUnit\Framework\TestCase
 {
     /** @var BilinearInterpolation */
     protected $Interpolation;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Interpolation = new BilinearInterpolation();
     }

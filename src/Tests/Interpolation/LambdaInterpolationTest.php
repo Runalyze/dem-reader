@@ -13,23 +13,21 @@ namespace Runalyze\DEM\Tests\Interpolation;
 
 use Runalyze\DEM\Interpolation\LambdaInterpolation;
 
-class LambdaInterpolationTest extends \PHPUnit_Framework_TestCase
+class LambdaInterpolationTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidClosure()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new LambdaInterpolation(function () {
             return 1;
         });
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testThatInvalidCallsAreDetected()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $Interpolation = new LambdaInterpolation(function ($x, $y, array $elevationOnBoundingBox) {
             return 1;
         });

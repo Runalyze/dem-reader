@@ -14,7 +14,7 @@ namespace Runalyze\DEM\Tests\Provider\GeoTIFF;
 use Runalyze\DEM\Interpolation\BilinearInterpolation;
 use Runalyze\DEM\Provider\GeoTIFF\SRTM4Provider;
 
-class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
+class SRTM4ProviderTest extends \PHPUnit\Framework\TestCase
 {
     /** @var string */
     const PATH_TO_FILES = '/../../../../tests/testfiles';
@@ -24,27 +24,20 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected $Provider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Provider = new SRTM4Provider(__DIR__.self::PATH_TO_FILES);
         $this->Provider->setInterpolation(new BilinearInterpolation());
     }
 
-    /**
-     * @param string $filename
-     */
-    protected function checkFile($filename)
+    protected function checkFile(string $filename)
     {
         if (!$this->fileIsThere($filename)) {
             $this->markTestSkipped('Required testfile "'.$filename.'" is not available.');
         }
     }
 
-    /**
-     * @param  string $filename
-     * @return bool
-     */
-    protected function fileIsThere($filename)
+    protected function fileIsThere(string $filename): bool
     {
         return file_exists(__DIR__.self::PATH_TO_FILES.'/'.$filename);
     }
@@ -113,14 +106,14 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->checkFile('srtm_38_03.tif');
 
-        $this->assertEquals(237, $this->Provider->getElevation(49.444722, 7.768889));
+        $this->assertEquals(239, $this->Provider->getElevation(49.444722, 7.768889));
     }
 
     public function testThatUnknownElevationInSydneyIsGuessedBySurroundingValues()
     {
         $this->checkFile('srtm_67_19.tif');
 
-        $this->assertEquals(4, $this->Provider->getElevation(-33.8705667, 151.1486337));
+        $this->assertEquals(5, $this->Provider->getElevation(-33.8705667, 151.1486337));
     }
 
     public function testMultipleElevationsInSydney()
@@ -128,7 +121,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_67_19.tif');
 
         $this->assertEquals(
-            [4, 4, 3],
+            [5, 5, 5],
             $this->Provider->getElevations(
                 [-33.8706555, -33.8705667, -33.8704860],
                 [151.1486918, 151.1486337, 151.1485585]
@@ -141,7 +134,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_36_02.tif');
 
         $this->assertEquals(
-            [20, 19, 19],
+            [18, 19, 19],
             $this->Provider->getElevations(
                 [51.5073509, 51.5074509, 51.5075509],
                 [-0.1277583, -0.1278583, -0.1279583]
@@ -154,7 +147,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_40_17.tif');
 
         $this->assertEquals(
-            [1668, 1671, 1672],
+            [1666, 1669, 1671],
             $this->Provider->getElevations(
                 [-22.5700, -22.5705, -22.5710],
                 [17.0836,  17.0841,  17.0846]
@@ -167,7 +160,7 @@ class SRTM4ProviderTest extends \PHPUnit_Framework_TestCase
         $this->checkFile('srtm_22_04.tif');
 
         $this->assertEquals(
-            [26, 29, 39],
+            [22, 25, 42],
             $this->Provider->getElevations(
                 [40.7127,  40.7132,  40.7137],
                 [-74.0059, -74.0064, -74.0069]

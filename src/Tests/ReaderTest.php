@@ -16,7 +16,7 @@ use Runalyze\DEM\Reader;
 use Runalyze\DEM\Tests\Provider\Fixtures\ProviderForNothing;
 use Runalyze\DEM\Tests\Provider\Fixtures\ProviderReturningTheTruth;
 
-class ReaderTest extends \PHPUnit_Framework_TestCase
+class ReaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testEmptyReader()
     {
@@ -27,19 +27,17 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($Reader->hasDataFor([[42.0, 3.14]]));
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testThatReaderWithoutProviderThrowsExceptionInsteadOfInvalidElevations()
     {
+        $this->expectException(RuntimeException::class);
+
         (new Reader())->getElevations([42.0, 42.2], [3.14, 3.14159]);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testReaderWithNoProviderThatCanHandleTheLocations()
     {
+        $this->expectException(RuntimeException::class);
+
         $Reader = new Reader(new ProviderForNothing());
         $Reader->getElevations([42.0, 42.2], [3.14, 3.14159]);
     }

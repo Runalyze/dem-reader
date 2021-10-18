@@ -11,7 +11,7 @@
 
 namespace Runalyze\DEM\Tests\Provider;
 
-class GuessInvalidValuesTraitTest extends \PHPUnit_Framework_TestCase
+class GuessInvalidValuesTraitTest extends \PHPUnit\Framework\TestCase
 {
     /** @var \ReflectionMethod */
     protected $GuessInvalidValuesOnBoxMethod;
@@ -19,7 +19,7 @@ class GuessInvalidValuesTraitTest extends \PHPUnit_Framework_TestCase
     /** @var object */
     protected $Object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Object = $this->getObjectForTrait('\\Runalyze\\DEM\\Provider\\GuessInvalidValuesTrait');
         $this->GuessInvalidValuesOnBoxMethod = new \ReflectionMethod($this->Object, 'guessInvalidValuesOnBox');

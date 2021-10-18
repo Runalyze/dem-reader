@@ -14,7 +14,7 @@ namespace Runalyze\DEM\Tests\Provider\GeoTIFF;
 use Runalyze\DEM\Interpolation\BilinearInterpolation;
 use Runalyze\DEM\Provider\GeoTIFF\SRTM1ArcSecondProvider;
 
-class SRTM1ArcSecondProviderTest extends \PHPUnit_Framework_TestCase
+class SRTM1ArcSecondProviderTest extends \PHPUnit\Framework\TestCase
 {
     /** @var string */
     const PATH_TO_FILES = '/../../../../tests/testfiles';
@@ -24,28 +24,21 @@ class SRTM1ArcSecondProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected $Provider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Provider = new SRTM1ArcSecondProvider(__DIR__.self::PATH_TO_FILES);
         $this->Provider->setFilenameFormat('%s%02d_%s%03d_1arc_v3.tif');
         $this->Provider->setInterpolation(new BilinearInterpolation());
     }
 
-    /**
-     * @param string $filename
-     */
-    protected function checkFile($filename)
+    protected function checkFile(string $filename)
     {
         if (!$this->fileIsThere($filename)) {
             $this->markTestSkipped('Required testfile "'.$filename.'" is not available.');
         }
     }
 
-    /**
-     * @param  string $filename
-     * @return bool
-     */
-    protected function fileIsThere($filename)
+    protected function fileIsThere(string $filename): bool
     {
         return file_exists(__DIR__.self::PATH_TO_FILES.'/'.$filename);
     }

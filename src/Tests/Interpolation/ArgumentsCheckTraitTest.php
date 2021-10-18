@@ -13,7 +13,7 @@ namespace Runalyze\DEM\Tests\Interpolation;
 
 use Runalyze\DEM\Exception\InvalidArgumentException;
 
-class ArgumentsCheckTraitTest extends \PHPUnit_Framework_TestCase
+class ArgumentsCheckTraitTest extends \PHPUnit\Framework\TestCase
 {
     /** @var \ReflectionMethod */
     protected $CheckArgumentsMethod;
@@ -21,13 +21,16 @@ class ArgumentsCheckTraitTest extends \PHPUnit_Framework_TestCase
     /** @var object */
     protected $Object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Object = $this->getObjectForTrait('\\Runalyze\\DEM\\Interpolation\\ArgumentsCheckTrait');
         $this->CheckArgumentsMethod = new \ReflectionMethod($this->Object, 'checkArguments');
         $this->CheckArgumentsMethod->setAccessible(true);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testValidCheckArgumentsCalls()
     {
         $this->CheckArgumentsMethod->invoke($this->Object, 0.0, 0.0, [42, 42, 42, 42]);
@@ -37,59 +40,52 @@ class ArgumentsCheckTraitTest extends \PHPUnit_Framework_TestCase
         $this->CheckArgumentsMethod->invoke($this->Object, 0.5, 0.3, [42, 42, 42, 42]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testEmptyBoundingBox()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->CheckArgumentsMethod->invoke($this->Object, 0.5, 0.5, []);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testBoundingBoxWithOnlyThreeElements()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->CheckArgumentsMethod->invoke($this->Object, 0.5, 0.5, [1, 2, 3]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testBoundingBoxWithTooManyElements()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->CheckArgumentsMethod->invoke($this->Object, 0.5, 0.5, [1, 2, 3, 4, 5]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testXNegative()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->CheckArgumentsMethod->invoke($this->Object, -0.1, 0.5, [1, 2, 3, 4]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testXLargerThanOne()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->CheckArgumentsMethod->invoke($this->Object, 1.1, 0.5, [1, 2, 3, 4]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testYNegative()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->CheckArgumentsMethod->invoke($this->Object, 0.1, -1.0, [1, 2, 3, 4]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testYLargerThanOne()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->CheckArgumentsMethod->invoke($this->Object, 0.3, 1.001, [1, 2, 3, 4]);
     }
 }

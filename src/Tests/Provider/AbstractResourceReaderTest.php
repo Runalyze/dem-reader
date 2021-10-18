@@ -11,36 +11,41 @@
 
 namespace Runalyze\DEM\Tests\Provider;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Runalyze\DEM\Exception\RuntimeException;
+use Runalyze\DEM\Provider\AbstractResourceReader;
 
-class AbstractResourceReaderTest extends \PHPUnit_Framework_TestCase
+class AbstractResourceReaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @param  bool                                     $resource
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @param  resource|bool                     $resource
+     * @return MockObject|AbstractResourceReader
      */
-    protected function constructMock($resource = false)
+    protected function constructMock($resource = false): MockObject|AbstractResourceReader
     {
         return $this->getMockForAbstractClass('\\Runalyze\\DEM\\Provider\\AbstractResourceReader', [$resource]);
     }
 
     public function testConstructorAndDestructorWithoutResource()
     {
+        $this->expectNotToPerformAssertions();
+
         $Reader = $this->constructMock(false);
         unset($Reader);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testSettingInvalidResource()
     {
+        $this->expectException(RuntimeException::class);
+
         $Reader = $this->constructMock(false);
         $Reader->setResource(false);
     }
 
     public function testReadingThisFileForSomeFun()
     {
+        $this->expectNotToPerformAssertions();
+
         $Reader = $this->constructMock(fopen(__FILE__, 'r'));
         $Reader->setResource(fopen(__FILE__, 'r'));
     }
